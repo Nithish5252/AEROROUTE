@@ -1,0 +1,42 @@
+{
+  "region": "US",
+  "algorithm": "KMeans",
+  "k": 4,
+  "random_state": 42,
+  "n_init": 10,
+  "max_iter": 300,
+  "fitted_at_utc": "2026-10-26T19:46:51.763483+00:00",
+  "feature_columns": [
+    "total_flights",
+    "outgoing_flights",
+    "incoming_flights",
+    "distinct_destinations",
+    "distinct_origins",
+    "betweenness_centrality",
+    "pagerank"
+  ],
+  "metrics": {
+    "k": 4,
+    "random_state": 42,
+    "inertia": 317.32,
+    "silhouette_score": 0.5265,
+    "calinski_harabasz_score": 603.95,
+    "davies_bouldin_score": 0.5451,
+    "pca_explained_variance_ratio": [
+      0.829,
+      0.1476
+    ],
+    "pca_cumulative_variance": 0.9766
+  },
+  "cluster_order_map": {
+    "1": 0,
+    "0": 1,
+    "2": 2,
+    "3": 3
+  },
+  "limitations": [
+    "Clusters represent operational flight movement density and graph network topology.",
+    "Does not forecast passenger demand, ticket pricing, load factors, or airline profitability.",
+    "Airport coverage is bounded to commercial flights recorded in the validated DOT dataset sample."
+  ]
+}

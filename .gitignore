@@ -1,0 +1,79 @@
+# ============================================================
+# AeroRoute .gitignore
+# ============================================================
+
+# -- Environment & Secrets -----------------------------------
+.env
+.env.*
+*.env
+!.env.example
+
+# -- Python & Bytecode ---------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# -- Virtual Environments ------------------------------------
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# -- IDE & Editors -------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -- Testing & Caches ----------------------------------------
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+scratch/
+
+# -- Streamlit -----------------------------------------------
+.streamlit/secrets.toml
+
+# -- Jupyter Notebooks ---------------------------------------
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# -- Raw CSVs & Large Archives -------------------------------
+archive/
+*.csv
+*.zip
+*.tar.gz
+*.rar
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/exports/*
+!data/exports/.gitkeep
+
+# -- Logs ----------------------------------------------------
+logs/*
+!logs/.gitkeep
+*.log
+
+# -- MongoDB Data & Locks ------------------------------------
+*.wiredTiger
+*.lock
+mongod.pid
+WiredTiger*
+collection-*.wt
+index-*.wt

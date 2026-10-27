@@ -1,0 +1,679 @@
+# ============================================================
+# AeroRoute -- Indian Aviation Reference Data (110 Airports & 14 Airlines)
+# File : src/ingestion/indian_reference_data.py
+# ============================================================
+
+import json
+from pathlib import Path
+from typing import Any, Dict, List, Tuple
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+
+# ---------------------------------------------------------------------------
+# Comprehensive Indian Civil Airports Registry (110 Stations)
+# Derived from DGCA / AAI official publications and verified coordinates
+# ---------------------------------------------------------------------------
+INDIAN_STATION_MAP: Dict[str, Dict[str, Any]] = {
+    "Adampur": {
+        "iata": "AIP", "icao": "VIAX", "name": "Adampur Airport",
+        "city": "Jalandhar", "state": "Punjab", "country": "India",
+        "lat": 31.4333, "lon": 75.7583, "elevation_ft": 765, "tier": 0
+    },
+    "Agartala": {
+        "iata": "IXA", "icao": "VEAT", "name": "Maharaja Bir Bikram Airport",
+        "city": "Agartala", "state": "Tripura", "country": "India",
+        "lat": 23.8867, "lon": 91.2406, "elevation_ft": 48, "tier": 1
+    },
+    "Agatti": {
+        "iata": "AGX", "icao": "VOAT", "name": "Agatti Airport",
+        "city": "Agatti Island", "state": "Lakshadweep", "country": "India",
+        "lat": 10.8242, "lon": 72.1761, "elevation_ft": 14, "tier": 0
+    },
+    "Agra": {
+        "iata": "AGR", "icao": "VIAG", "name": "Agra Airport / Kheria AFS",
+        "city": "Agra", "state": "Uttar Pradesh", "country": "India",
+        "lat": 27.1558, "lon": 77.9609, "elevation_ft": 551, "tier": 0
+    },
+    "Ahmedabad": {
+        "iata": "AMD", "icao": "VAAH", "name": "Sardar Vallabhbhai Patel International Airport",
+        "city": "Ahmedabad", "state": "Gujarat", "country": "India",
+        "lat": 23.0772, "lon": 72.6347, "elevation_ft": 189, "tier": 2
+    },
+    "Aizwal": {
+        "iata": "AJL", "icao": "VELP", "name": "Lengpui Airport",
+        "city": "Aizawl", "state": "Mizoram", "country": "India",
+        "lat": 23.8406, "lon": 92.6192, "elevation_ft": 1329, "tier": 0
+    },
+    "Allahabad": {
+        "iata": "IXD", "icao": "VEAB", "name": "Prayagraj Airport",
+        "city": "Prayagraj", "state": "Uttar Pradesh", "country": "India",
+        "lat": 25.4403, "lon": 81.7342, "elevation_ft": 322, "tier": 1
+    },
+    "Amritsar": {
+        "iata": "ATQ", "icao": "VIAR", "name": "Sri Guru Ram Dass Jee International Airport",
+        "city": "Amritsar", "state": "Punjab", "country": "India",
+        "lat": 31.7096, "lon": 74.7973, "elevation_ft": 756, "tier": 1
+    },
+    "Aurangabad": {
+        "iata": "IXU", "icao": "VAAU", "name": "Chhatrapati Sambhaji Nagar Airport",
+        "city": "Aurangabad", "state": "Maharashtra", "country": "India",
+        "lat": 19.8631, "lon": 75.3981, "elevation_ft": 1911, "tier": 1
+    },
+    "Bagdogra": {
+        "iata": "IXB", "icao": "VEBD", "name": "Bagdogra International Airport",
+        "city": "Siliguri", "state": "West Bengal", "country": "India",
+        "lat": 26.6812, "lon": 88.3286, "elevation_ft": 284, "tier": 1
+    },
+    "Bathinda": {
+        "iata": "BUP", "icao": "VIBT", "name": "Bathinda Airport",
+        "city": "Bathinda", "state": "Punjab", "country": "India",
+        "lat": 30.2708, "lon": 74.7558, "elevation_ft": 660, "tier": 0
+    },
+    "Belgaum": {
+        "iata": "IXG", "icao": "VOBM", "name": "Belagavi Airport",
+        "city": "Belgaum", "state": "Karnataka", "country": "India",
+        "lat": 15.8592, "lon": 74.6181, "elevation_ft": 2500, "tier": 0
+    },
+    "Bengaluru": {
+        "iata": "BLR", "icao": "VOBL", "name": "Kempegowda International Airport",
+        "city": "Bengaluru", "state": "Karnataka", "country": "India",
+        "lat": 13.1986, "lon": 77.7066, "elevation_ft": 3000, "tier": 3
+    },
+    "Bhavnagar": {
+        "iata": "BHU", "icao": "VABV", "name": "Bhavnagar Airport",
+        "city": "Bhavnagar", "state": "Gujarat", "country": "India",
+        "lat": 21.7522, "lon": 72.1853, "elevation_ft": 44, "tier": 0
+    },
+    "Bhopal": {
+        "iata": "BHO", "icao": "VABP", "name": "Raja Bhoj Airport",
+        "city": "Bhopal", "state": "Madhya Pradesh", "country": "India",
+        "lat": 23.2875, "lon": 77.3378, "elevation_ft": 1720, "tier": 1
+    },
+    "Bhubaneswar": {
+        "iata": "BBI", "icao": "VEBS", "name": "Biju Patnaik International Airport",
+        "city": "Bhubaneswar", "state": "Odisha", "country": "India",
+        "lat": 20.2444, "lon": 85.8178, "elevation_ft": 138, "tier": 1
+    },
+    "Bhuj": {
+        "iata": "BHJ", "icao": "VABJ", "name": "Bhuj Airport",
+        "city": "Bhuj", "state": "Gujarat", "country": "India",
+        "lat": 23.2878, "lon": 69.6700, "elevation_ft": 268, "tier": 0
+    },
+    "Bidar": {
+        "iata": "IXX", "icao": "VOBR", "name": "Bidar Airport",
+        "city": "Bidar", "state": "Karnataka", "country": "India",
+        "lat": 17.9078, "lon": 77.4844, "elevation_ft": 2178, "tier": 0
+    },
+    "Bikaner": {
+        "iata": "BKB", "icao": "VIBK", "name": "Nal Airport",
+        "city": "Bikaner", "state": "Rajasthan", "country": "India",
+        "lat": 28.0711, "lon": 73.2067, "elevation_ft": 750, "tier": 0
+    },
+    "Bilaspur": {
+        "iata": "PAB", "icao": "VABI", "name": "Bilasa Devi Kevat Airport",
+        "city": "Bilaspur", "state": "Chhattisgarh", "country": "India",
+        "lat": 21.9881, "lon": 82.1111, "elevation_ft": 899, "tier": 0
+    },
+    "Calicut": {
+        "iata": "CCJ", "icao": "VOCL", "name": "Calicut International Airport",
+        "city": "Kozhikode", "state": "Kerala", "country": "India",
+        "lat": 11.1369, "lon": 75.9553, "elevation_ft": 342, "tier": 1
+    },
+    "Chandigarh": {
+        "iata": "IXC", "icao": "VICG", "name": "Shaheed Bhagat Singh International Airport",
+        "city": "Chandigarh", "state": "Chandigarh", "country": "India",
+        "lat": 30.6733, "lon": 76.7886, "elevation_ft": 1012, "tier": 1
+    },
+    "Chennai": {
+        "iata": "MAA", "icao": "VOMM", "name": "Chennai International Airport",
+        "city": "Chennai", "state": "Tamil Nadu", "country": "India",
+        "lat": 12.9941, "lon": 80.1709, "elevation_ft": 52, "tier": 2
+    },
+    "Coimbatore": {
+        "iata": "CJB", "icao": "VOCB", "name": "Coimbatore International Airport",
+        "city": "Coimbatore", "state": "Tamil Nadu", "country": "India",
+        "lat": 11.0300, "lon": 77.0434, "elevation_ft": 1319, "tier": 1
+    },
+    "Cooch-Behar": {
+        "iata": "COH", "icao": "VECO", "name": "Cooch Behar Airport",
+        "city": "Cooch Behar", "state": "West Bengal", "country": "India",
+        "lat": 26.3314, "lon": 89.4664, "elevation_ft": 141, "tier": 0
+    },
+    "Darbhanga": {
+        "iata": "DBR", "icao": "VEDH", "name": "Darbhanga Airport",
+        "city": "Darbhanga", "state": "Bihar", "country": "India",
+        "lat": 26.1953, "lon": 85.9189, "elevation_ft": 171, "tier": 0
+    },
+    "Dehradun": {
+        "iata": "DED", "icao": "VIDN", "name": "Jolly Grant Airport",
+        "city": "Dehradun", "state": "Uttarakhand", "country": "India",
+        "lat": 30.1897, "lon": 78.1803, "elevation_ft": 1831, "tier": 1
+    },
+    "Delhi": {
+        "iata": "DEL", "icao": "VIDP", "name": "Indira Gandhi International Airport",
+        "city": "New Delhi", "state": "Delhi", "country": "India",
+        "lat": 28.5562, "lon": 77.1000, "elevation_ft": 777, "tier": 3
+    },
+    "Dibrugarh": {
+        "iata": "DIB", "icao": "VEMN", "name": "Dibrugarh Airport",
+        "city": "Dibrugarh", "state": "Assam", "country": "India",
+        "lat": 27.4839, "lon": 95.0178, "elevation_ft": 362, "tier": 0
+    },
+    "Dimapur": {
+        "iata": "DMU", "icao": "VEMR", "name": "Dimapur Airport",
+        "city": "Dimapur", "state": "Nagaland", "country": "India",
+        "lat": 25.8839, "lon": 93.7711, "elevation_ft": 487, "tier": 0
+    },
+    "Diu": {
+        "iata": "DIU", "icao": "VA1P", "name": "Diu Airport",
+        "city": "Diu", "state": "Daman and Diu", "country": "India",
+        "lat": 20.7136, "lon": 70.9206, "elevation_ft": 30, "tier": 0
+    },
+    "Gaya": {
+        "iata": "GAY", "icao": "VEGY", "name": "Gaya Airport",
+        "city": "Gaya", "state": "Bihar", "country": "India",
+        "lat": 24.7442, "lon": 84.9511, "elevation_ft": 381, "tier": 0
+    },
+    "Goa": {
+        "iata": "GOI", "icao": "VOGO", "name": "Dabolim International Airport",
+        "city": "Goa", "state": "Goa", "country": "India",
+        "lat": 15.3808, "lon": 73.8314, "elevation_ft": 184, "tier": 2
+    },
+    "Gorakhpur": {
+        "iata": "GOP", "icao": "VEGK", "name": "Gorakhpur Airport",
+        "city": "Gorakhpur", "state": "Uttar Pradesh", "country": "India",
+        "lat": 26.7397, "lon": 83.4497, "elevation_ft": 259, "tier": 0
+    },
+    "Guwahati": {
+        "iata": "GAU", "icao": "VEGT", "name": "Lokpriya Gopinath Bordoloi International Airport",
+        "city": "Guwahati", "state": "Assam", "country": "India",
+        "lat": 26.1061, "lon": 91.5859, "elevation_ft": 162, "tier": 2
+    },
+    "Gwalior": {
+        "iata": "GWL", "icao": "VIGR", "name": "Rajmata Vijaya Raje Scindia Airport",
+        "city": "Gwalior", "state": "Madhya Pradesh", "country": "India",
+        "lat": 26.2933, "lon": 78.2278, "elevation_ft": 617, "tier": 0
+    },
+    "Hubli": {
+        "iata": "HBX", "icao": "VOHB", "name": "Hubballi Airport",
+        "city": "Hubli", "state": "Karnataka", "country": "India",
+        "lat": 15.3617, "lon": 75.0850, "elevation_ft": 2170, "tier": 0
+    },
+    "Hyderabad": {
+        "iata": "HYD", "icao": "VOHS", "name": "Rajiv Gandhi International Airport",
+        "city": "Hyderabad", "state": "Telangana", "country": "India",
+        "lat": 17.2403, "lon": 78.4294, "elevation_ft": 2024, "tier": 3
+    },
+    "Imphal": {
+        "iata": "IMF", "icao": "VEIM", "name": "Bir Tikendrajit International Airport",
+        "city": "Imphal", "state": "Manipur", "country": "India",
+        "lat": 24.7600, "lon": 93.8967, "elevation_ft": 2542, "tier": 0
+    },
+    "Indore": {
+        "iata": "IDR", "icao": "VAID", "name": "Devi Ahilyabai Holkar International Airport",
+        "city": "Indore", "state": "Madhya Pradesh", "country": "India",
+        "lat": 22.7217, "lon": 75.8011, "elevation_ft": 1850, "tier": 1
+    },
+    "Jabalpur": {
+        "iata": "JLR", "icao": "VAJB", "name": "Dumna Airport",
+        "city": "Jabalpur", "state": "Madhya Pradesh", "country": "India",
+        "lat": 23.1778, "lon": 80.0522, "elevation_ft": 1624, "tier": 0
+    },
+    "Jaipur": {
+        "iata": "JAI", "icao": "VIJP", "name": "Jaipur International Airport",
+        "city": "Jaipur", "state": "Rajasthan", "country": "India",
+        "lat": 26.8242, "lon": 75.8122, "elevation_ft": 1263, "tier": 2
+    },
+    "Jaisalmer": {
+        "iata": "JSA", "icao": "VIJR", "name": "Jaisalmer Airport",
+        "city": "Jaisalmer", "state": "Rajasthan", "country": "India",
+        "lat": 26.8886, "lon": 70.8653, "elevation_ft": 887, "tier": 0
+    },
+    "Jalgaon": {
+        "iata": "JLG", "icao": "VAJL", "name": "Jalgaon Airport",
+        "city": "Jalgaon", "state": "Maharashtra", "country": "India",
+        "lat": 20.9633, "lon": 75.6267, "elevation_ft": 800, "tier": 0
+    },
+    "Jammu": {
+        "iata": "IXJ", "icao": "VIJU", "name": "Jammu Airport",
+        "city": "Jammu", "state": "Jammu and Kashmir", "country": "India",
+        "lat": 32.6892, "lon": 74.8375, "elevation_ft": 1029, "tier": 1
+    },
+    "Jamnagar": {
+        "iata": "JGA", "icao": "VAJM", "name": "Jamnagar Airport",
+        "city": "Jamnagar", "state": "Gujarat", "country": "India",
+        "lat": 22.4658, "lon": 70.0125, "elevation_ft": 69, "tier": 0
+    },
+    "Jharsuguda": {
+        "iata": "JRG", "icao": "VEJH", "name": "Veer Surendra Sai Airport",
+        "city": "Jharsuguda", "state": "Odisha", "country": "India",
+        "lat": 21.9147, "lon": 84.0506, "elevation_ft": 751, "tier": 0
+    },
+    "Jodhpur": {
+        "iata": "JDH", "icao": "VIJO", "name": "Jodhpur Airport",
+        "city": "Jodhpur", "state": "Rajasthan", "country": "India",
+        "lat": 26.2514, "lon": 73.0489, "elevation_ft": 719, "tier": 1
+    },
+    "Jorhat": {
+        "iata": "JRH", "icao": "VEJT", "name": "Jorhat Airport / Rowriah",
+        "city": "Jorhat", "state": "Assam", "country": "India",
+        "lat": 26.7319, "lon": 94.1756, "elevation_ft": 284, "tier": 0
+    },
+    "Kadapa": {
+        "iata": "CDP", "icao": "VOCP", "name": "Kadapa Airport",
+        "city": "Kadapa", "state": "Andhra Pradesh", "country": "India",
+        "lat": 14.5100, "lon": 78.7725, "elevation_ft": 430, "tier": 0
+    },
+    "Kalaburgi (Gulbarga)": {
+        "iata": "GBI", "icao": "VOGB", "name": "Kalaburagi Airport",
+        "city": "Kalaburagi", "state": "Karnataka", "country": "India",
+        "lat": 17.3117, "lon": 76.9458, "elevation_ft": 1500, "tier": 0
+    },
+    "Kandla": {
+        "iata": "IXY", "icao": "VAKE", "name": "Kandla Airport",
+        "city": "Gandhidham", "state": "Gujarat", "country": "India",
+        "lat": 23.1133, "lon": 70.1003, "elevation_ft": 95, "tier": 0
+    },
+    "Kangra": {
+        "iata": "DHM", "icao": "VIGG", "name": "Kangra Airport / Gaggal",
+        "city": "Dharamshala", "state": "Himachal Pradesh", "country": "India",
+        "lat": 32.1650, "lon": 76.2633, "elevation_ft": 2525, "tier": 0
+    },
+    "Kannur": {
+        "iata": "CNN", "icao": "VOKN", "name": "Kannur International Airport",
+        "city": "Kannur", "state": "Kerala", "country": "India",
+        "lat": 11.9189, "lon": 75.5486, "elevation_ft": 335, "tier": 1
+    },
+    "Kannur International Airport": {
+        "iata": "CNN", "icao": "VOKN", "name": "Kannur International Airport",
+        "city": "Kannur", "state": "Kerala", "country": "India",
+        "lat": 11.9189, "lon": 75.5486, "elevation_ft": 335, "tier": 1
+    },
+    "Kanpur": {
+        "iata": "KNU", "icao": "VIKA", "name": "Kanpur Airport / Chakeri",
+        "city": "Kanpur", "state": "Uttar Pradesh", "country": "India",
+        "lat": 26.4422, "lon": 80.4125, "elevation_ft": 410, "tier": 0
+    },
+    "Keshod": {
+        "iata": "IXK", "icao": "VAKS", "name": "Keshod Airport",
+        "city": "Keshod", "state": "Gujarat", "country": "India",
+        "lat": 21.3167, "lon": 70.2700, "elevation_ft": 200, "tier": 0
+    },
+    "Khajuraho": {
+        "iata": "HJR", "icao": "VEKO", "name": "Khajuraho Airport",
+        "city": "Khajuraho", "state": "Madhya Pradesh", "country": "India",
+        "lat": 24.8172, "lon": 79.9189, "elevation_ft": 728, "tier": 0
+    },
+    "Kishangarh": {
+        "iata": "KQH", "icao": "VIKG", "name": "Kishangarh Airport",
+        "city": "Ajmer", "state": "Rajasthan", "country": "India",
+        "lat": 26.5983, "lon": 74.8167, "elevation_ft": 1400, "tier": 0
+    },
+    "Kochi": {
+        "iata": "COK", "icao": "VOCI", "name": "Cochin International Airport",
+        "city": "Kochi", "state": "Kerala", "country": "India",
+        "lat": 10.1556, "lon": 76.3912, "elevation_ft": 30, "tier": 2
+    },
+    "Kolhapur": {
+        "iata": "KLH", "icao": "VAKP", "name": "Chhatrapati Rajaram Maharaj Airport",
+        "city": "Kolhapur", "state": "Maharashtra", "country": "India",
+        "lat": 16.6644, "lon": 74.2819, "elevation_ft": 2000, "tier": 0
+    },
+    "Kolkata": {
+        "iata": "CCU", "icao": "VECC", "name": "Netaji Subhash Chandra Bose International Airport",
+        "city": "Kolkata", "state": "West Bengal", "country": "India",
+        "lat": 22.6547, "lon": 88.4467, "elevation_ft": 16, "tier": 2
+    },
+    "Kullu": {
+        "iata": "KUU", "icao": "VIBR", "name": "Kullu-Manali Airport",
+        "city": "Bhuntar", "state": "Himachal Pradesh", "country": "India",
+        "lat": 31.8767, "lon": 77.1542, "elevation_ft": 3573, "tier": 0
+    },
+    "Kushinagar": {
+        "iata": "KBK", "icao": "VEKI", "name": "Kushinagar International Airport",
+        "city": "Kushinagar", "state": "Uttar Pradesh", "country": "India",
+        "lat": 26.7728, "lon": 83.9017, "elevation_ft": 260, "tier": 0
+    },
+    "Leh": {
+        "iata": "IXL", "icao": "VILH", "name": "Kushok Bakula Rimpochee Airport",
+        "city": "Leh", "state": "Ladakh", "country": "India",
+        "lat": 34.1358, "lon": 77.5464, "elevation_ft": 10682, "tier": 1
+    },
+    "Lilabari": {
+        "iata": "IXI", "icao": "VELR", "name": "Lilabari Airport",
+        "city": "Lakhimpur", "state": "Assam", "country": "India",
+        "lat": 27.2958, "lon": 94.0975, "elevation_ft": 331, "tier": 0
+    },
+    "Lucknow": {
+        "iata": "LKO", "icao": "VILK", "name": "Chaudhary Charan Singh International Airport",
+        "city": "Lucknow", "state": "Uttar Pradesh", "country": "India",
+        "lat": 26.7606, "lon": 80.8893, "elevation_ft": 405, "tier": 2
+    },
+    "Ludhiana": {
+        "iata": "LUH", "icao": "VILD", "name": "Sahnewal Airport",
+        "city": "Ludhiana", "state": "Punjab", "country": "India",
+        "lat": 30.8550, "lon": 75.9536, "elevation_ft": 833, "tier": 0
+    },
+    "MIHAN": {
+        "iata": "NAG", "icao": "VANP", "name": "Dr. Babasaheb Ambedkar International Airport / MIHAN",
+        "city": "Nagpur", "state": "Maharashtra", "country": "India",
+        "lat": 21.0922, "lon": 79.0472, "elevation_ft": 1033, "tier": 1
+    },
+    "Madurai": {
+        "iata": "IXM", "icao": "VOMD", "name": "Madurai Airport",
+        "city": "Madurai", "state": "Tamil Nadu", "country": "India",
+        "lat": 9.8344, "lon": 78.0933, "elevation_ft": 446, "tier": 1
+    },
+    "Mangalore": {
+        "iata": "IXE", "icao": "VOML", "name": "Mangaluru International Airport",
+        "city": "Mangalore", "state": "Karnataka", "country": "India",
+        "lat": 12.9614, "lon": 74.8900, "elevation_ft": 336, "tier": 1
+    },
+    "Mumbai": {
+        "iata": "BOM", "icao": "VABB", "name": "Chhatrapati Shivaji Maharaj International Airport",
+        "city": "Mumbai", "state": "Maharashtra", "country": "India",
+        "lat": 19.0896, "lon": 72.8656, "elevation_ft": 39, "tier": 3
+    },
+    "Mysore": {
+        "iata": "MYQ", "icao": "VOMY", "name": "Mysuru Airport",
+        "city": "Mysore", "state": "Karnataka", "country": "India",
+        "lat": 12.2300, "lon": 76.6500, "elevation_ft": 2346, "tier": 0
+    },
+    "Nagpur": {
+        "iata": "NAG", "icao": "VANP", "name": "Dr. Babasaheb Ambedkar International Airport",
+        "city": "Nagpur", "state": "Maharashtra", "country": "India",
+        "lat": 21.0922, "lon": 79.0472, "elevation_ft": 1033, "tier": 1
+    },
+    "Nanded": {
+        "iata": "NDC", "icao": "VAND", "name": "Shri Guru Gobind Singh Ji Airport",
+        "city": "Nanded", "state": "Maharashtra", "country": "India",
+        "lat": 19.1836, "lon": 77.3183, "elevation_ft": 1224, "tier": 0
+    },
+    "Nasik": {
+        "iata": "ISK", "icao": "VAOZ", "name": "Nashik Airport / Ozar",
+        "city": "Nashik", "state": "Maharashtra", "country": "India",
+        "lat": 20.1189, "lon": 73.9136, "elevation_ft": 1900, "tier": 0
+    },
+    "Pakyong": {
+        "iata": "PYG", "icao": "VEPY", "name": "Pakyong Airport",
+        "city": "Gangtok", "state": "Sikkim", "country": "India",
+        "lat": 27.2272, "lon": 88.5889, "elevation_ft": 4590, "tier": 0
+    },
+    "Pantnagar": {
+        "iata": "PGH", "icao": "VIPT", "name": "Pantnagar Airport",
+        "city": "Pantnagar", "state": "Uttarakhand", "country": "India",
+        "lat": 29.0333, "lon": 79.4736, "elevation_ft": 798, "tier": 0
+    },
+    "Passighat": {
+        "iata": "IXT", "icao": "VEPG", "name": "Pasighat Airport",
+        "city": "Pasighat", "state": "Arunachal Pradesh", "country": "India",
+        "lat": 28.0667, "lon": 95.3333, "elevation_ft": 515, "tier": 0
+    },
+    "Pathankot": {
+        "iata": "IXP", "icao": "VIPK", "name": "Pathankot Airport",
+        "city": "Pathankot", "state": "Punjab", "country": "India",
+        "lat": 32.2333, "lon": 75.6347, "elevation_ft": 1017, "tier": 0
+    },
+    "Patna": {
+        "iata": "PAT", "icao": "VEPT", "name": "Jayprakash Narayan International Airport",
+        "city": "Patna", "state": "Bihar", "country": "India",
+        "lat": 25.5911, "lon": 85.0881, "elevation_ft": 170, "tier": 2
+    },
+    "Pithoragarh": {
+        "iata": "NNS", "icao": "VIDX", "name": "Naini Saini Airport",
+        "city": "Pithoragarh", "state": "Uttarakhand", "country": "India",
+        "lat": 29.5886, "lon": 80.2433, "elevation_ft": 4970, "tier": 0
+    },
+    "Pondicherry": {
+        "iata": "PNY", "icao": "VOPC", "name": "Puducherry Airport",
+        "city": "Puducherry", "state": "Puducherry", "country": "India",
+        "lat": 11.9689, "lon": 79.8106, "elevation_ft": 121, "tier": 0
+    },
+    "Port Blair": {
+        "iata": "IXZ", "icao": "VOPB", "name": "Veer Savarkar International Airport",
+        "city": "Port Blair", "state": "Andaman and Nicobar Islands", "country": "India",
+        "lat": 11.6411, "lon": 92.7297, "elevation_ft": 14, "tier": 1
+    },
+    "Pune": {
+        "iata": "PNQ", "icao": "VAPO", "name": "Pune International Airport",
+        "city": "Pune", "state": "Maharashtra", "country": "India",
+        "lat": 18.5822, "lon": 73.9197, "elevation_ft": 1827, "tier": 2
+    },
+    "Raipur": {
+        "iata": "RPR", "icao": "VARP", "name": "Swami Vivekananda Airport",
+        "city": "Raipur", "state": "Chhattisgarh", "country": "India",
+        "lat": 21.1803, "lon": 81.7389, "elevation_ft": 1040, "tier": 1
+    },
+    "Rajahmundry": {
+        "iata": "RJA", "icao": "VORY", "name": "Rajahmundry Airport",
+        "city": "Rajahmundry", "state": "Andhra Pradesh", "country": "India",
+        "lat": 17.1103, "lon": 81.8183, "elevation_ft": 151, "tier": 0
+    },
+    "Rajkot": {
+        "iata": "RAJ", "icao": "VARK", "name": "Rajkot International Airport",
+        "city": "Rajkot", "state": "Gujarat", "country": "India",
+        "lat": 22.3092, "lon": 70.7794, "elevation_ft": 440, "tier": 1
+    },
+    "Ranchi": {
+        "iata": "IXR", "icao": "VERC", "name": "Birsa Munda Airport",
+        "city": "Ranchi", "state": "Jharkhand", "country": "India",
+        "lat": 23.3142, "lon": 85.3217, "elevation_ft": 2149, "tier": 1
+    },
+    "Rupsi": {
+        "iata": "RUP", "icao": "VERU", "name": "Rupsi Airport",
+        "city": "Rupsi", "state": "Assam", "country": "India",
+        "lat": 26.1400, "lon": 89.9078, "elevation_ft": 131, "tier": 0
+    },
+    "Salem": {
+        "iata": "SXV", "icao": "VOSM", "name": "Salem Airport",
+        "city": "Salem", "state": "Tamil Nadu", "country": "India",
+        "lat": 11.7833, "lon": 78.0647, "elevation_ft": 1000, "tier": 0
+    },
+    "Shillong": {
+        "iata": "SHL", "icao": "VEBI", "name": "Umroi Airport",
+        "city": "Shillong", "state": "Meghalaya", "country": "India",
+        "lat": 25.7036, "lon": 91.9789, "elevation_ft": 2910, "tier": 0
+    },
+    "Shimla": {
+        "iata": "SLV", "icao": "VISM", "name": "Shimla Airport",
+        "city": "Shimla", "state": "Himachal Pradesh", "country": "India",
+        "lat": 31.0817, "lon": 77.0683, "elevation_ft": 5074, "tier": 0
+    },
+    "Shirdi": {
+        "iata": "SAG", "icao": "VASU", "name": "Shirdi International Airport",
+        "city": "Shirdi", "state": "Maharashtra", "country": "India",
+        "lat": 19.6892, "lon": 74.3789, "elevation_ft": 2073, "tier": 0
+    },
+    "Shirdi Airport": {
+        "iata": "SAG", "icao": "VASU", "name": "Shirdi International Airport",
+        "city": "Shirdi", "state": "Maharashtra", "country": "India",
+        "lat": 19.6892, "lon": 74.3789, "elevation_ft": 2073, "tier": 0
+    },
+    "Silchar": {
+        "iata": "IXS", "icao": "VEKU", "name": "Silchar Airport",
+        "city": "Silchar", "state": "Assam", "country": "India",
+        "lat": 24.9128, "lon": 92.9789, "elevation_ft": 352, "tier": 0
+    },
+    "Srinagar": {
+        "iata": "SXR", "icao": "VISR", "name": "Sheikh ul-Alam International Airport",
+        "city": "Srinagar", "state": "Jammu and Kashmir", "country": "India",
+        "lat": 33.9872, "lon": 74.7742, "elevation_ft": 5446, "tier": 2
+    },
+    "Surat": {
+        "iata": "STV", "icao": "VASU", "name": "Surat International Airport",
+        "city": "Surat", "state": "Gujarat", "country": "India",
+        "lat": 21.1142, "lon": 72.7419, "elevation_ft": 16, "tier": 1
+    },
+    "Tezpur": {
+        "iata": "TEZ", "icao": "VETZ", "name": "Tezpur Airport",
+        "city": "Tezpur", "state": "Assam", "country": "India",
+        "lat": 26.7103, "lon": 92.7972, "elevation_ft": 240, "tier": 0
+    },
+    "Tezu": {
+        "iata": "TEI", "icao": "VETJ", "name": "Tezu Airport",
+        "city": "Tezu", "state": "Arunachal Pradesh", "country": "India",
+        "lat": 27.9406, "lon": 96.1342, "elevation_ft": 755, "tier": 0
+    },
+    "Thiruvananthapuram": {
+        "iata": "TRV", "icao": "VOTV", "name": "Thiruvananthapuram International Airport",
+        "city": "Thiruvananthapuram", "state": "Kerala", "country": "India",
+        "lat": 8.4822, "lon": 76.9200, "elevation_ft": 15, "tier": 1
+    },
+    "Tiruchirappalli": {
+        "iata": "TRZ", "icao": "VOTR", "name": "Tiruchirappalli International Airport",
+        "city": "Tiruchirappalli", "state": "Tamil Nadu", "country": "India",
+        "lat": 10.7653, "lon": 78.7097, "elevation_ft": 288, "tier": 1
+    },
+    "Tirupati": {
+        "iata": "TIR", "icao": "VOTP", "name": "Tirupati Airport",
+        "city": "Tirupati", "state": "Andhra Pradesh", "country": "India",
+        "lat": 13.6325, "lon": 79.5433, "elevation_ft": 350, "tier": 0
+    },
+    "Tuticorin": {
+        "iata": "TCR", "icao": "VOTK", "name": "Tuticorin Airport",
+        "city": "Thoothukudi", "state": "Tamil Nadu", "country": "India",
+        "lat": 8.7239, "lon": 78.0267, "elevation_ft": 129, "tier": 0
+    },
+    "Udaipur": {
+        "iata": "UDR", "icao": "VAUD", "name": "Maharana Pratap Airport",
+        "city": "Udaipur", "state": "Rajasthan", "country": "India",
+        "lat": 24.6178, "lon": 73.8961, "elevation_ft": 1684, "tier": 1
+    },
+    "Vadodara": {
+        "iata": "BDQ", "icao": "VABO", "name": "Vadodara Airport",
+        "city": "Vadodara", "state": "Gujarat", "country": "India",
+        "lat": 22.3361, "lon": 73.2264, "elevation_ft": 129, "tier": 1
+    },
+    "Varanasi": {
+        "iata": "VNS", "icao": "VEBN", "name": "Lal Bahadur Shastri International Airport",
+        "city": "Varanasi", "state": "Uttar Pradesh", "country": "India",
+        "lat": 25.4522, "lon": 82.8592, "elevation_ft": 266, "tier": 1
+    },
+    "Vidyanagar": {
+        "iata": "VDY", "icao": "VOJV", "name": "Jindal Vijaynagar Airport",
+        "city": "Toranagallu", "state": "Karnataka", "country": "India",
+        "lat": 15.1725, "lon": 76.6347, "elevation_ft": 1600, "tier": 0
+    },
+    "Vijayawada": {
+        "iata": "VGA", "icao": "VOBZ", "name": "Vijayawada International Airport",
+        "city": "Vijayawada", "state": "Andhra Pradesh", "country": "India",
+        "lat": 16.5303, "lon": 80.7967, "elevation_ft": 82, "tier": 1
+    },
+    "Visakhapatnam": {
+        "iata": "VTZ", "icao": "VOVZ", "name": "Visakhapatnam International Airport",
+        "city": "Visakhapatnam", "state": "Andhra Pradesh", "country": "India",
+        "lat": 17.7211, "lon": 83.2244, "elevation_ft": 17, "tier": 1
+    },
+}
+
+# ---------------------------------------------------------------------------
+# Indian Airlines Registry (14 Domestic Carriers)
+# ---------------------------------------------------------------------------
+INDIAN_AIRLINES_MAP: Dict[str, Dict[str, str]] = {
+    "IndiGo": {
+        "airline_code": "6E", "icao": "IGO", "airline_name": "IndiGo",
+        "callsign": "IFLY", "country": "India", "base": "DEL"
+    },
+    "SpiceJet": {
+        "airline_code": "SG", "icao": "SEJ", "airline_name": "SpiceJet",
+        "callsign": "SPICEJET", "country": "India", "base": "DEL"
+    },
+    "Air India": {
+        "airline_code": "AI", "icao": "AIC", "airline_name": "Air India",
+        "callsign": "AIRINDIA", "country": "India", "base": "DEL"
+    },
+    "GoAir": {
+        "airline_code": "G8", "icao": "GOW", "airline_name": "GoAir",
+        "callsign": "GOAIR", "country": "India", "base": "BOM"
+    },
+    "Air India Express": {
+        "airline_code": "IX", "icao": "AXB", "airline_name": "Air India Express",
+        "callsign": "EXPRESS INDIA", "country": "India", "base": "COK"
+    },
+    "Vistara": {
+        "airline_code": "UK", "icao": "VTI", "airline_name": "Vistara",
+        "callsign": "VISTARA", "country": "India", "base": "DEL"
+    },
+    "Alliance Air (India)": {
+        "airline_code": "9I", "icao": "LLR", "airline_name": "Alliance Air",
+        "callsign": "ALLIED", "country": "India", "base": "DEL"
+    },
+    "Jet Airways": {
+        "airline_code": "9W", "icao": "JAI", "airline_name": "Jet Airways",
+        "callsign": "JET AIRWAYS", "country": "India", "base": "BOM"
+    },
+    "Akasa Air": {
+        "airline_code": "QP", "icao": "AKJ", "airline_name": "Akasa Air",
+        "callsign": "AKASA AIR", "country": "India", "base": "BOM"
+    },
+    "TruJet": {
+        "airline_code": "2T", "icao": "TRJ", "airline_name": "TruJet",
+        "callsign": "TRUJET", "country": "India", "base": "HYD"
+    },
+    "Star Air": {
+        "airline_code": "S5", "icao": "SDG", "airline_name": "Star Air",
+        "callsign": "HISTAR", "country": "India", "base": "BLR"
+    },
+    "FlyBig": {
+        "airline_code": "S9", "icao": "FLG", "airline_name": "FlyBig",
+        "callsign": "FLYBIG", "country": "India", "base": "IDR"
+    },
+    "Jetlite": {
+        "airline_code": "S2", "icao": "JLL", "airline_name": "Jetlite",
+        "callsign": "LITEJET", "country": "India", "base": "BOM"
+    },
+    "IndiaOne Air": {
+        "airline_code": "I7", "icao": "IOA", "airline_name": "IndiaOne Air",
+        "callsign": "INDIAONE", "country": "India", "base": "BBI"
+    },
+}
+
+
+def get_airport_by_station(station_name: str) -> Dict[str, Any]:
+    """Retrieve airport record by station name or IATA code."""
+    cleaned = str(station_name).strip()
+    if cleaned in INDIAN_STATION_MAP:
+        return INDIAN_STATION_MAP[cleaned]
+    # Check if station_name is already an IATA code
+    for meta in INDIAN_STATION_MAP.values():
+        if meta["iata"] == cleaned.upper():
+            return meta
+    return None
+
+
+def get_airline_by_name(airline_name: str) -> Dict[str, str]:
+    """Retrieve airline metadata by airline name or carrier code."""
+    cleaned = str(airline_name).strip()
+    if cleaned in INDIAN_AIRLINES_MAP:
+        return INDIAN_AIRLINES_MAP[cleaned]
+    for meta in INDIAN_AIRLINES_MAP.values():
+        if meta["airline_code"] == cleaned.upper():
+            return meta
+    return {
+        "airline_code": cleaned[:2].upper(),
+        "icao": "UNK",
+        "airline_name": cleaned,
+        "callsign": cleaned.upper(),
+        "country": "India",
+        "base": "DEL"
+    }
+
+
+def export_reference_json():
+    """Save reference datasets to data/reference/ for auditability."""
+    ref_dir = PROJECT_ROOT / "data" / "reference"
+    ref_dir.mkdir(parents=True, exist_ok=True)
+    
+    airports_path = ref_dir / "indian_airports.json"
+    with open(airports_path, "w", encoding="utf-8") as f:
+        json.dump(INDIAN_STATION_MAP, f, indent=2)
+
+    airlines_path = ref_dir / "indian_airlines.json"
+    with open(airlines_path, "w", encoding="utf-8") as f:
+        json.dump(INDIAN_AIRLINES_MAP, f, indent=2)
+
+    print(f"Exported reference datasets to {ref_dir}")
+
+
+if __name__ == "__main__":
+    export_reference_json()

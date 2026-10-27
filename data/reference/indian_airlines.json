@@ -1,0 +1,114 @@
+{
+  "IndiGo": {
+    "airline_code": "6E",
+    "icao": "IGO",
+    "airline_name": "IndiGo",
+    "callsign": "IFLY",
+    "country": "India",
+    "base": "DEL"
+  },
+  "SpiceJet": {
+    "airline_code": "SG",
+    "icao": "SEJ",
+    "airline_name": "SpiceJet",
+    "callsign": "SPICEJET",
+    "country": "India",
+    "base": "DEL"
+  },
+  "Air India": {
+    "airline_code": "AI",
+    "icao": "AIC",
+    "airline_name": "Air India",
+    "callsign": "AIRINDIA",
+    "country": "India",
+    "base": "DEL"
+  },
+  "GoAir": {
+    "airline_code": "G8",
+    "icao": "GOW",
+    "airline_name": "GoAir",
+    "callsign": "GOAIR",
+    "country": "India",
+    "base": "BOM"
+  },
+  "Air India Express": {
+    "airline_code": "IX",
+    "icao": "AXB",
+    "airline_name": "Air India Express",
+    "callsign": "EXPRESS INDIA",
+    "country": "India",
+    "base": "COK"
+  },
+  "Vistara": {
+    "airline_code": "UK",
+    "icao": "VTI",
+    "airline_name": "Vistara",
+    "callsign": "VISTARA",
+    "country": "India",
+    "base": "DEL"
+  },
+  "Alliance Air (India)": {
+    "airline_code": "9I",
+    "icao": "LLR",
+    "airline_name": "Alliance Air",
+    "callsign": "ALLIED",
+    "country": "India",
+    "base": "DEL"
+  },
+  "Jet Airways": {
+    "airline_code": "9W",
+    "icao": "JAI",
+    "airline_name": "Jet Airways",
+    "callsign": "JET AIRWAYS",
+    "country": "India",
+    "base": "BOM"
+  },
+  "Akasa Air": {
+    "airline_code": "QP",
+    "icao": "AKJ",
+    "airline_name": "Akasa Air",
+    "callsign": "AKASA AIR",
+    "country": "India",
+    "base": "BOM"
+  },
+  "TruJet": {
+    "airline_code": "2T",
+    "icao": "TRJ",
+    "airline_name": "TruJet",
+    "callsign": "TRUJET",
+    "country": "India",
+    "base": "HYD"
+  },
+  "Star Air": {
+    "airline_code": "S5",
+    "icao": "SDG",
+    "airline_name": "Star Air",
+    "callsign": "HISTAR",
+    "country": "India",
+    "base": "BLR"
+  },
+  "FlyBig": {
+    "airline_code": "S9",
+    "icao": "FLG",
+    "airline_name": "FlyBig",
+    "callsign": "FLYBIG",
+    "country": "India",
+    "base": "IDR"
+  },
+  "Jetlite": {
+    "airline_code": "S2",
+    "icao": "JLL",
+    "airline_name": "Jetlite",
+    "callsign": "LITEJET",
+    "country": "India",
+    "base": "BOM"
+  },
+  "IndiaOne Air": {
+    "airline_code": "I7",
+    "icao": "IOA",
+    "airline_name": "IndiaOne Air",
+    "callsign": "INDIAONE",
+    "country": "India",
+    "base": "BBI"
+  }
+}

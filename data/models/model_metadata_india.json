@@ -1,0 +1,42 @@
+{
+  "region": "INDIA",
+  "algorithm": "KMeans",
+  "k": 4,
+  "random_state": 42,
+  "n_init": 10,
+  "max_iter": 300,
+  "fitted_at_utc": "2026-10-26T20:45:12.278395+00:00",
+  "feature_columns": [
+    "total_flights",
+    "outgoing_flights",
+    "incoming_flights",
+    "distinct_destinations",
+    "distinct_origins",
+    "betweenness_centrality",
+    "pagerank"
+  ],
+  "metrics": {
+    "k": 4,
+    "random_state": 42,
+    "inertia": 134.35,
+    "silhouette_score": 0.4407,
+    "calinski_harabasz_score": 157.08,
+    "davies_bouldin_score": 0.6524,
+    "pca_explained_variance_ratio": [
+      0.8022,
+      0.1538
+    ],
+    "pca_cumulative_variance": 0.956
+  },
+  "cluster_order_map": {
+    "0": 0,
+    "3": 1,
+    "1": 2,
+    "2": 3
+  },
+  "limitations": [
+    "Clusters represent published scheduled movement frequency and NetworkX graph centrality.",
+    "Based on approved DGCA domestic airline timetable filings (2018\u20132025).",
+    "Does not reflect actual delays, cancellations, or passenger load factors."
+  ]
+}

@@ -1,0 +1,42 @@
+# ============================================================
+# AeroRoute -- Python Dependencies
+# Python Version : 3.12.x
+# MongoDB        : 4.4.x  (mapReduce fully supported)
+# Last Updated   : Phase 2 setup
+# ============================================================
+
+# -- Core Data Processing ------------------------------------
+pandas==2.2.3
+numpy==1.26.4
+
+# -- MongoDB Driver ------------------------------------------
+pymongo==3.13.0
+
+# -- Machine Learning ----------------------------------------
+scikit-learn==1.5.2
+joblib==1.4.2
+
+# -- Network / Graph Analysis --------------------------------
+networkx==3.3
+
+# -- Dashboard & Visualisation -------------------------------
+streamlit==1.39.0
+plotly==5.24.1
+folium==0.17.0
+streamlit-folium==0.22.0
+
+# -- Environment & Configuration -----------------------------
+python-dotenv==1.0.1
+
+# -- Progress & Utilities ------------------------------------
+tqdm==4.66.5
+
+# -- Data Export ---------------------------------------------
+openpyxl==3.1.5
+
+# -- Testing & Quality Assurance (Phase 9) -------------------
+pytest>=8.0.0
+
+# -- Presentation Deck Export ---------------------------------
+python-pptx>=1.0.0
+
